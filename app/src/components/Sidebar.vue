@@ -25,7 +25,7 @@
 <style scoped>
     .features {
         position: absolute;
-        top: 25px;
+        top: 80px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -38,7 +38,6 @@
     }
     .sidebar {
         display: flex;
-        position: relative;
         background: #8E2D35;
         width: 50px;
         height: 100vh;

@@ -6,6 +6,8 @@ import Products from './pages/Products.vue'
 import Suppliers from './pages/Suppliers.vue'
 import IAM from './pages/IAM.vue'
 import Transactions from './pages/Transactions.vue'
+import ProductCreation from './pages/ProductCreation.vue'
+import SupplierCreation from './pages/SupplierCreation.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -19,8 +21,16 @@ const router = createRouter({
             component: Products
         },
         {
+            path: '/product-creation',
+            component: ProductCreation
+        },
+        {
             path: '/suppliers',
             component: Suppliers
+        },
+        {
+            path: '/supplier-creation',
+            component: SupplierCreation
         },
         {
             path: '/iam',

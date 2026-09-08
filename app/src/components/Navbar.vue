@@ -1,10 +1,8 @@
 <script setup>
-import Button from './Button.vue';
 
 const navbar = defineProps({
     pageName: String,
     pageTitle: String,
-    buttonName: String,
 })
 
 </script>
@@ -12,24 +10,26 @@ const navbar = defineProps({
 <template>
     <div class="navbar">
         <p class="place"><span style="color: #8E2D35; font-weight: 1000;">// </span>{{ navbar.pageName }}</p>
-        <h1 class="heading">{{ navbar.pageTitle }} (<span style="color: #8E2D35;">3</span>)</h1>
-        <Button class="button" :buttonName="navbar.buttonName" color="#8E2D35" fontColor="#8E2D35"/>
+        <div class="main">
+            <h1 class="heading">{{ navbar.pageTitle }} (<span style="color: #8E2D35;">3</span>)</h1>
+        </div>
     </div>
 </template>
 
 <style scoped>
-    .button {
+    .main {
         position: absolute;
-        top: 45px;
-        right: 50px;
+        display: flex;
+        align-items: center;
+        width: 90%;
+        top: 40px;
+        left: 50px;
     }
     .heading {
-        position: absolute;
-        top: 45px;
-        left: 50px;
         font-family: "Carlito";
         font-weight: 600;
         font-size: 20pt;
+        justify-self: start;
     }
     .place {
         position: absolute;
@@ -38,6 +38,7 @@ const navbar = defineProps({
         font-family: "Carlito";
     }
     .navbar {
+        display: flex;
         position: relative;
         height: 85px;
         width: 100%;

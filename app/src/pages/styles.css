@@ -1,0 +1,40 @@
+.container {
+    display: inline-grid;
+    grid-template-columns: 1fr 99fr;
+    grid-template-rows: 1fr 0.6fr 5fr;
+}
+
+.sidebar {
+    grid-row: 1 / -1;
+}
+
+.navbar {
+    grid-column: 2;
+    grid-row: 1 / -1;
+}
+.features {
+    grid-column: 2;
+    grid-row: 2 / -1;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 10px 50px;
+    gap: 10px;
+}
+.main {
+    overflow-y: auto;
+    grid-column: 2;
+    grid-row: 3 / -1;
+    height: 425px;
+}
+.searchbar {
+    margin-left: auto;
+}
+.action-features {
+    display: flex;
+    margin-right: auto;
+    gap: 10px;
+}
+.button {
+    margin-left: auto;
+}

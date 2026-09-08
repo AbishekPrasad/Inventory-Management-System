@@ -1,0 +1,54 @@
+.container {
+    display: inline-grid;
+    grid-template-columns: 1fr 100fr;
+    grid-template-rows: 1fr 7fr;
+}
+h1 {
+    font-family: 'carlito';
+    font-size: 20pt;
+}
+.sidebar {
+    grid-row: 1 / -1;
+}
+
+.navbar {
+    grid-column: 2;
+    grid-row: 1 / -1;
+}
+.main {
+    display: inline-flex;
+    gap: 50px;
+    grid-column: 2;
+    grid-row: 2 / -1;
+    height: 425px;
+    margin: 50px;
+    margin-left: 100px;
+}
+.form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 30px;
+}
+input {
+    border: 1px solid #BEBEBE;
+    border-radius: 6px;
+    font-size: 9pt;
+    font-family: 'roboto';
+    height: 35px;
+    width: 300px;
+    padding: 10px;
+}
+input::placeholder{
+    color: #BEBEBE;
+}
+.button {
+    display: flex;
+    grid-row: 6;
+    grid-column: 2;
+    gap: 10px;
+    margin-top: auto;
+}
+p {
+    font-family: 'roboto';
+}

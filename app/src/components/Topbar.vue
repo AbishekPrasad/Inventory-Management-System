@@ -14,7 +14,6 @@ import Button from './Button.vue';
 
 <style scoped>
     .features {
-        flex: 1;
         display: flex;
         justify-content: flex-end;
         align-items: center;

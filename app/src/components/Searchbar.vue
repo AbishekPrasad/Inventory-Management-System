@@ -10,19 +10,17 @@
 
 <style scoped>
     .icon {
-        height: 25px;
-        width: 25px;
-        left: 10px;
+        height: 20px;
+        width: 20px;
     }
     .searchbar {
-        position: relative;
-        height: 35px;
-        width: 450px;
+        display: flex;
+        height: 30px;
+        width: 350px;
         background-color: white;
-        border: 2px solid #BEBEBE;
+        border: 1px solid #BEBEBE;
         border-radius: 50px;
-        display: inline;
         align-items: center;
-        align-content: center;
+        padding: 0px 10px;
     }
 </style>
