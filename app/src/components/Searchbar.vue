@@ -5,6 +5,7 @@
 <template>
     <div class="searchbar">
         <img class="icon" src="../../icons/Search icon.png">
+        <p>search</p>
     </div>
 </template>
 
@@ -22,5 +23,11 @@
         border-radius: 50px;
         align-items: center;
         padding: 0px 10px;
+    }
+    p {
+        padding: 10px;
+        font-family: 'roboto';
+        font-size: 10pt;
+        color: #BEBEBE;
     }
 </style>

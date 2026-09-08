@@ -11,12 +11,12 @@
     <div>
         <Topbar />
         <div class="container">
-            <Navbar class="navbar" pageName="Supplier Creation Page" pageTitle="Supplier Creation"/>
+            <Navbar class="navbar" pageName="Employee Creation" pageTitle="Employment Creation Page"/>
             <Sidebar class="sidebar" />
             <div class="main">
                 <PhotoCard card="photo"/>
                 <div class="form">
-                    <h1>Provide Supplier Details</h1> 
+                    <h1>Provide Employee Details</h1> 
                         <div style="grid-row: 2; grid-column: 1;">
                             <p>Product name</p>
                             <input type="text" placeholder="Enter Product name">
@@ -50,8 +50,8 @@
                             <input type="text" placeholder="Enter Product name">
                         </div>
                         <div class="button">
-                            <router-link to="/suppliers" style="text-decoration: none;"><Button buttonName="Close" color="#8E2D35"/></router-link>
-                            <router-link to="/suppliers" style="text-decoration: none;"><Button buttonName="Launch Supplier" color="#8E2D35"/></router-link>
+                            <router-link to="/iam" style="text-decoration: none;"><Button buttonName="Close" color="#8E2D35"/></router-link>
+                            <router-link to="/iam" style="text-decoration: none;"><Button buttonName="Launch Employee" color="#8E2D35"/></router-link>
                         </div>
                 </div>   
             </div>
