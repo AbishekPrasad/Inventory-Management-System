@@ -8,7 +8,8 @@
         supplier: String,
         quantity: Number,
         amount: Number,
-        routeTo: String
+        routeTo: String,
+        imagePath: String
     })
 </script>
 
@@ -21,6 +22,7 @@
             <h5>{{ props.supplier }}</h5>
             <h5>{{ props.quantity }}</h5>
             <h5>{{ props.amount }}</h5>
+            <img :src="props.imagePath" alt="product">
         </router-link>
     </div>
 </template>
@@ -32,7 +34,8 @@
         grid-template-rows: 1fr;
         margin-left: 50px;
         margin-bottom: 10px;
-        padding: 20px;
+        padding-left: 50px;
+        padding-right: 20px;
         width: 1120px;
         height: 80px;
         border-radius: 10px;
@@ -52,5 +55,10 @@
         display: inline-flex;
         justify-content: space-around;
         align-items: center;
+    }
+    img {
+        height: 50px;
+        width: 50px;
+        border-radius: 10%;
     }
 </style>

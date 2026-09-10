@@ -10,12 +10,37 @@
     import { ref } from 'vue';
 
     const num_of_items = ref(0)
-    const items = products.products
+    const items = ref(products.products)
+    const allItems = products.products
 
-    num_of_items.value = items.length
+    num_of_items.value = items.value.length
     num_of_items.value = "(" + String(num_of_items.value) + ")"
-    
 
+    const amount = ref(0)
+    const Tquantity = ref(0)
+
+    function sortAZ() {
+        items.value = [...items.value].sort((a, b) =>
+            a.name.localeCompare(b.name)
+        )
+    }
+
+    function sortZA() {
+        items.value = [...items.value].sort((a, b) =>
+            b.name.localeCompare(a.name)
+        )
+    }
+
+    function searchProducts(search) {
+        const value = search.toLowerCase()
+
+        items.value = allItems.filter(item =>
+            item.name.toLowerCase().includes(value) ||
+            item.category.toLowerCase().includes(value) ||
+            item.supplier.toLowerCase().includes(value) ||
+            item.sku.toLowerCase().includes(value)
+        )
+    }
 </script>
 
 <template>
@@ -31,10 +56,10 @@
             <Sidebar class="sidebar" />
             <div class="features"> 
                 <div class="action-features">
-                    <Button color="#BEBEBE" buttonName="A - Z" style="width: 100px;"/>
-                    <Button color="#BEBEBE" buttonName="Z - A" style="width: 100px;"/>
+                    <Button @click="sortAZ" color="#BEBEBE" buttonName="A - Z" style="width: 100px;"/>
+                    <Button @click="sortZA" color="#BEBEBE" buttonName="Z - A" style="width: 100px;"/>
                 </div>
-                <Searchbar class="searchbar"/>
+                <Searchbar class="searchbar" @search="searchProducts"/>
                 <router-link to="/product-creation" style="text-decoration: none;">
                     <Button class="button" buttonName="Create Product" color="#8E2D35"/>
                 </router-link>
@@ -45,8 +70,9 @@
                     :name="item.name"
                     :category="item.category"
                     :supplier="item.supplier"
-                    :quantity="item.quantity"
-                    :amount="item.amount"
+                    :quantity="Tquantity + item.ISQ"
+                    :amount="amount + item.price"
+                    :imagePath="item.image ? `http://localhost:8000${item.image}` : `./icons/Img.png`"
                     :routeTo="`/product-details/${item.id}`"
                 />         
             </div>
