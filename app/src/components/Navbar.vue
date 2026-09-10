@@ -3,6 +3,7 @@
 const navbar = defineProps({
     pageName: String,
     pageTitle: String,
+    totalItems: String
 })
 
 </script>
@@ -11,7 +12,7 @@ const navbar = defineProps({
     <div class="navbar">
         <p class="place"><span style="color: #8E2D35; font-weight: 1000;">// </span>{{ navbar.pageName }}</p>
         <div class="main">
-            <h1 class="heading">{{ navbar.pageTitle }} (<span style="color: #8E2D35;">3</span>)</h1>
+            <h1 class="heading">{{ navbar.pageTitle }} <span style="color: #8E2D35;">{{ navbar.totalItems }}</span></h1>
         </div>
     </div>
 </template>

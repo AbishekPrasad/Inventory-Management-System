@@ -5,13 +5,29 @@
     import Topbar from '../components/Topbar.vue';
     import Button from '../components/Button.vue';
     import Searchbar from '../components/Searchbar.vue';
+    import products from '../database/db.json'
+
+    import { ref } from 'vue';
+
+    const num_of_items = ref(0)
+    const items = products.products
+
+    num_of_items.value = items.length
+    num_of_items.value = "(" + String(num_of_items.value) + ")"
+    
+
 </script>
 
 <template>
     <div>
         <Topbar />
         <div class="container">
-            <Navbar class="navbar" pageName="Products" pageTitle="Your Products" buttonName="Create Product"/>
+            <Navbar class="navbar" 
+                pageName="Products" 
+                pageTitle="Your Products" 
+                buttonName="Create Product" 
+                :totalItems="num_of_items"
+            />
             <Sidebar class="sidebar" />
             <div class="features"> 
                 <div class="action-features">
@@ -24,9 +40,15 @@
                 </router-link>
             </div>
             <div class="main">
-                <Plainbar />
-                <Plainbar />
-                <Plainbar />           
+                <Plainbar 
+                    v-for="item in items"
+                    :name="item.name"
+                    :category="item.category"
+                    :supplier="item.supplier"
+                    :quantity="item.quantity"
+                    :amount="item.amount"
+                    :routeTo="`/product-details/${item.id}`"
+                />         
             </div>
         </div>
     </div>

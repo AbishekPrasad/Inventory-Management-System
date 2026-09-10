@@ -4,7 +4,6 @@
     import Sidebar from '../components/Sidebar.vue';
     import Topbar from '../components/Topbar.vue';
     import Button from '../components/Button.vue';
-    import PhotoCard from '../components/PhotoCard.vue';
 </script>
 
 <template>
@@ -14,7 +13,12 @@
             <Navbar class="navbar" pageName="Supplier Creation Page" pageTitle="Supplier Creation"/>
             <Sidebar class="sidebar" />
             <div class="main">
-                <PhotoCard card="photo"/>
+                <div class="background">
+                    <h6>Upload Photo</h6>
+                    <img src="" alt="">
+                    <h6>Description</h6>
+                    <textarea class="description" placeholder="Enter Description"></textarea>
+                </div>
                 <div class="form">
                     <h1>Provide Supplier Details</h1> 
                         <div style="grid-row: 2; grid-column: 1;">
