@@ -15,23 +15,10 @@
         },
         {
             "id": "2",
-            "name": "zgfwef",
+            "name": "zgfwefewfew",
             "sku": "PRD-102",
             "category": "ewf",
             "supplier": "wefew",
-            "price": 0.0,
-            "ISQ": 0,
-            "reorderLevel": 0,
-            "weight": 0.0,
-            "image": "",
-            "description": ""
-        },
-        {
-            "id": "3",
-            "name": "dsvsv",
-            "sku": "PRD-103",
-            "category": "",
-            "supplier": "",
             "price": 0.0,
             "ISQ": 0,
             "reorderLevel": 0,
@@ -46,7 +33,9 @@
             "name": "SafeGuard Supplies",
             "email": "contact@safeguard.com",
             "phone": "9876543210",
-            "address": "Chennai, TN"
+            "address": "Chennai, TN",
+            "image": "/images/5ce06063-90ea-41af-9c91-eb1f663ca7ef.jpg",
+            "description": ""
         },
         {
             "id": "2",

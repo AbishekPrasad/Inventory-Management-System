@@ -1,22 +1,25 @@
 <script setup>
-import Navbar from '../components/Navbar.vue';
-import Sidebar from '../components/Sidebar.vue';
-import Topbar from '../components/Topbar.vue';
-import Button from '../components/Button.vue';
+import Navbar from '../../components/Navbar.vue';
+import Sidebar from '../../components/Sidebar.vue';
+import Topbar from '../../components/Topbar.vue';
+import Button from '../../components/Button.vue';
 
-import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
 const router = useRouter();
 const imagePreview = ref('');
 
 const product = reactive({
+    id: "",
     name: "",
     ISQ: 0,
-    price: 0.0,
+    price: 0,
     reorderLevel: 0,
     category: "",
     supplier: "",
+    sku: "",
     weight: 0,
     image: "",
     description: ""
@@ -33,10 +36,29 @@ function uploadImage(event) {
     imagePreview.value = URL.createObjectURL(file);
 }
 
-async function onLaunch() {
-    let imagePath = "";
+onMounted(async () => {
+    const response = await fetch(
+        `http://localhost:8000/products/${route.params.id}`
+    );
 
-    if (product.image) {
+    if (!response.ok) {
+        console.error("Product not found");
+        return;
+    }
+
+    const data = await response.json();
+
+    Object.assign(product, data);
+
+    if (data.image) {
+        imagePreview.value = `http://localhost:8000${data.image}`;
+    }
+});
+
+async function onEdit() {
+    let imagePath = product.image;
+
+    if (product.image instanceof File) {
         const formData = new FormData();
         formData.append("image", product.image);
 
@@ -57,8 +79,10 @@ async function onLaunch() {
         imagePath = imageData.image;
     }
 
-    const newProduct = {
+    const updatedProduct = {
+        id: product.id,
         name: product.name,
+        sku: product.sku,
         category: product.category,
         supplier: product.supplier,
         price: product.price,
@@ -70,13 +94,13 @@ async function onLaunch() {
     };
 
     const response = await fetch(
-        'http://localhost:8000/products',
+        `http://localhost:8000/products/${route.params.id}`,
         {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newProduct)
+            body: JSON.stringify(updatedProduct)
         }
     );
 
@@ -84,7 +108,27 @@ async function onLaunch() {
         console.error(await response.text());
         return;
     }
-    console.log("LAUNCH CLICKED")
+
+    router.back();
+}
+
+async function onDelete() {
+    if (!confirm("Are you sure you want to delete this product?")) {
+        return;
+    }
+
+    const response = await fetch(
+        `http://localhost:8000/products/${route.params.id}`,
+        {
+            method: 'DELETE'
+        }
+    );
+
+    if (!response.ok) {
+        console.error(await response.text());
+        return;
+    }
+
     router.push('/products');
 }
 </script>
@@ -95,27 +139,32 @@ async function onLaunch() {
         <div class="container">
             <Navbar
                 class="navbar"
-                pageName="Product Creation Page"
-                pageTitle="Product Creation"
+                pageName="Product Details"
+                pageTitle="Product Details and Modification"
             />
             <Sidebar class="sidebar" />
+
             <div class="main">
                 <div class="background">
-                    <h6>Upload Photo</h6>
+                    <h6>Photo</h6>
+
                     <label class="image-upload">
                         <input type="file" accept="image/*" @change="uploadImage">
                         <img v-if="imagePreview" :src="imagePreview" class="preview">
                         <img v-else src="/icons/Img.png" class="upload-icon">
                     </label>
+
                     <h6>Description</h6>
+
                     <textarea
                         class="description"
                         placeholder="Description"
                         v-model="product.description"
                     ></textarea>
                 </div>
+
                 <div class="form">
-                    <h1>Provide Product Details</h1>
+                    <h1>Your Product Details</h1>
 
                     <div style="grid-row: 2; grid-column: 1;">
                         <p>Product name</p>
@@ -149,7 +198,7 @@ async function onLaunch() {
 
                     <div style="grid-row: 5; grid-column: 1;">
                         <p>Stock Keeping Unit (SKU)</p>
-                        <input value="Auto-Generated" type="text" placeholder="PRD-101" readonly>
+                        <input :value="product.sku" type="text" placeholder="PRD-101" readonly>
                     </div>
 
                     <div style="grid-row: 5; grid-column: 2;">
@@ -157,13 +206,21 @@ async function onLaunch() {
                         <input v-model.number="product.weight" type="number" placeholder="Enter in kgs">
                     </div>
 
+                    <Button
+                        @click="onDelete"
+                        style="grid-row: 6; grid-column: 1; margin-right: 100%;"
+                        buttonName="Delete"
+                        color="#8E2D35"
+                    />
+
                     <div class="button">
                         <router-link to="/products" style="text-decoration: none;">
                             <Button buttonName="Close" color="#8E2D35" />
                         </router-link>
+
                         <Button
-                            @click="onLaunch"
-                            buttonName="Launch Product"
+                            @click="onEdit"
+                            buttonName="Edit Product"
                             color="#8E2D35"
                         />
                     </div>
@@ -174,5 +231,8 @@ async function onLaunch() {
 </template>
 
 <style scoped>
-@import "./formstyle.css";
+@import "../formstyle.css";
+input {
+    background-color: #F9F9F9;
+}
 </style>

@@ -27,6 +27,7 @@ app.mount(
     name="images"
 )
 
+
 class ProductCreate(BaseModel):
     name: str
     category: str
@@ -37,6 +38,7 @@ class ProductCreate(BaseModel):
     weight: float
     image: str = ""
     description: str = ""
+
 
 class Product(BaseModel):
     id: str
@@ -51,6 +53,17 @@ class Product(BaseModel):
     image: str = ""
     description: str = ""
 
+
+class Supplier(BaseModel):
+    id: str = ""
+    name: str
+    email: str
+    phone: str
+    address: str
+    image: str = ""
+    description: str = ""
+
+
 @app.get("/products/{id}")
 def get_product(id: str):
     with open(DB_PATH, "r", encoding="utf-8") as file:
@@ -60,7 +73,11 @@ def get_product(id: str):
         if str(product["id"]) == id:
             return product
 
-    raise HTTPException(status_code=404, detail="Product not found")
+    raise HTTPException(
+        status_code=404,
+        detail="Product not found"
+    )
+
 
 @app.post("/products")
 def create_product(product: ProductCreate):
@@ -106,6 +123,7 @@ def create_product(product: ProductCreate):
 
     return new_product
 
+
 @app.put("/products/{id}")
 def update_product(id: str, product: Product):
     with open(DB_PATH, "r", encoding="utf-8") as file:
@@ -120,7 +138,11 @@ def update_product(id: str, product: Product):
 
             return db["products"][index]
 
-    raise HTTPException(status_code=404, detail="Product not found")
+    raise HTTPException(
+        status_code=404,
+        detail="Product not found"
+    )
+
 
 @app.delete("/products/{id}")
 def delete_product(id: str):
@@ -136,13 +158,23 @@ def delete_product(id: str):
 
             return deleted_product
 
-    raise HTTPException(status_code=404, detail="Product not found")
+    raise HTTPException(
+        status_code=404,
+        detail="Product not found"
+    )
+
 
 @app.post("/upload-image")
 async def upload_image(image: UploadFile = File(...)):
-    extension = os.path.splitext(image.filename or "")[1]
+    extension = os.path.splitext(
+        image.filename or ""
+    )[1]
+
     filename = f"{uuid.uuid4()}{extension}"
-    file_path = os.path.join(IMAGE_DIR, filename)
+    file_path = os.path.join(
+        IMAGE_DIR,
+        filename
+    )
 
     contents = await image.read()
 
@@ -152,3 +184,93 @@ async def upload_image(image: UploadFile = File(...)):
     return {
         "image": f"/images/{filename}"
     }
+
+
+@app.get("/suppliers/{id}")
+def get_supplier(id: str):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    for supplier in db["suppliers"]:
+        if str(supplier["id"]) == id:
+            return supplier
+
+    raise HTTPException(
+        status_code=404,
+        detail="Supplier not found"
+    )
+
+
+@app.post("/suppliers")
+def create_supplier(supplier: Supplier):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    suppliers = db["suppliers"]
+
+    if suppliers:
+        new_id = str(
+            max(
+                int(item["id"])
+                for item in suppliers
+            ) + 1
+        )
+    else:
+        new_id = "1"
+
+    new_supplier = {
+        "id": new_id,
+        "name": supplier.name,
+        "email": supplier.email,
+        "phone": supplier.phone,
+        "address": supplier.address,
+        "image": supplier.image,
+        "description": supplier.description
+    }
+
+    suppliers.append(new_supplier)
+
+    with open(DB_PATH, "w", encoding="utf-8") as file:
+        json.dump(db, file, indent=4)
+
+    return new_supplier
+
+
+@app.put("/suppliers/{id}")
+def update_supplier(id: str, supplier: Supplier):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    for index, item in enumerate(db["suppliers"]):
+        if str(item["id"]) == id:
+            db["suppliers"][index] = supplier.model_dump()
+
+            with open(DB_PATH, "w", encoding="utf-8") as file:
+                json.dump(db, file, indent=4)
+
+            return db["suppliers"][index]
+
+    raise HTTPException(
+        status_code=404,
+        detail="Supplier not found"
+    )
+
+
+@app.delete("/suppliers/{id}")
+def delete_supplier(id: str):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    for index, supplier in enumerate(db["suppliers"]):
+        if str(supplier["id"]) == id:
+            deleted_supplier = db["suppliers"].pop(index)
+
+            with open(DB_PATH, "w", encoding="utf-8") as file:
+                json.dump(db, file, indent=4)
+
+            return deleted_supplier
+
+    raise HTTPException(
+        status_code=404,
+        detail="Supplier not found"
+    )

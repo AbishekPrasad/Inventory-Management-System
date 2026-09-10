@@ -1,11 +1,11 @@
 <script setup>
-    import Plainbar from '../components/Plainbar.vue';
-    import Navbar from '../components/Navbar.vue';
-    import Sidebar from '../components/Sidebar.vue';
-    import Topbar from '../components/Topbar.vue';
-    import Button from '../components/Button.vue';
-    import Searchbar from '../components/Searchbar.vue';
-    import products from '../database/db.json'
+    import Plainbar from '../../components/Plainbar.vue';
+    import Navbar from '../../components/Navbar.vue';
+    import Sidebar from '../../components/Sidebar.vue';
+    import Topbar from '../../components/Topbar.vue';
+    import Button from '../../components/Button.vue';
+    import Searchbar from '../../components/Searchbar.vue';
+    import products from '../../database/db.json'
 
     import { ref } from 'vue';
 
@@ -67,19 +67,22 @@
             <div class="main">
                 <Plainbar 
                     v-for="item in items"
-                    :name="item.name"
-                    :category="item.category"
-                    :supplier="item.supplier"
-                    :quantity="Tquantity + item.ISQ"
-                    :amount="amount + item.price"
-                    :imagePath="item.image ? `http://localhost:8000${item.image}` : `./icons/Img.png`"
+                    :key="item.id"
                     :routeTo="`/product-details/${item.id}`"
-                />         
+                >
+                    <h5>{{ item.sku }}</h5>
+                    <h5>{{ item.name }}</h5>
+                    <h5>{{ item.category }}</h5>
+                    <h5>{{ item.supplier }}</h5>
+                    <h5>{{ Tquantity + item.ISQ }}</h5>
+                    <h5>{{ amount + item.price }}</h5>
+                    <img :src="item.image ? `http://localhost:8000${item.image}` : '/icons/Img.png'">
+                </Plainbar>         
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-    @import "./styles.css";
+    @import "../styles.css";
 </style>

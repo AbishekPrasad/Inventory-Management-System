@@ -1,25 +1,22 @@
 <script setup>
-import Navbar from '../components/Navbar.vue';
-import Sidebar from '../components/Sidebar.vue';
-import Topbar from '../components/Topbar.vue';
-import Button from '../components/Button.vue';
+import Navbar from '../../components/Navbar.vue';
+import Sidebar from '../../components/Sidebar.vue';
+import Topbar from '../../components/Topbar.vue';
+import Button from '../../components/Button.vue';
 
-import { reactive, ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-const route = useRoute();
 const router = useRouter();
 const imagePreview = ref('');
 
 const product = reactive({
-    id: "",
     name: "",
     ISQ: 0,
-    price: 0,
+    price: 0.0,
     reorderLevel: 0,
     category: "",
     supplier: "",
-    sku: "",
     weight: 0,
     image: "",
     description: ""
@@ -36,29 +33,10 @@ function uploadImage(event) {
     imagePreview.value = URL.createObjectURL(file);
 }
 
-onMounted(async () => {
-    const response = await fetch(
-        `http://localhost:8000/products/${route.params.id}`
-    );
+async function onLaunch() {
+    let imagePath = "";
 
-    if (!response.ok) {
-        console.error("Product not found");
-        return;
-    }
-
-    const data = await response.json();
-
-    Object.assign(product, data);
-
-    if (data.image) {
-        imagePreview.value = `http://localhost:8000${data.image}`;
-    }
-});
-
-async function onEdit() {
-    let imagePath = product.image;
-
-    if (product.image instanceof File) {
+    if (product.image) {
         const formData = new FormData();
         formData.append("image", product.image);
 
@@ -79,10 +57,8 @@ async function onEdit() {
         imagePath = imageData.image;
     }
 
-    const updatedProduct = {
-        id: product.id,
+    const newProduct = {
         name: product.name,
-        sku: product.sku,
         category: product.category,
         supplier: product.supplier,
         price: product.price,
@@ -94,13 +70,13 @@ async function onEdit() {
     };
 
     const response = await fetch(
-        `http://localhost:8000/products/${route.params.id}`,
+        'http://localhost:8000/products',
         {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(updatedProduct)
+            body: JSON.stringify(newProduct)
         }
     );
 
@@ -108,27 +84,7 @@ async function onEdit() {
         console.error(await response.text());
         return;
     }
-
-    router.back();
-}
-
-async function onDelete() {
-    if (!confirm("Are you sure you want to delete this product?")) {
-        return;
-    }
-
-    const response = await fetch(
-        `http://localhost:8000/products/${route.params.id}`,
-        {
-            method: 'DELETE'
-        }
-    );
-
-    if (!response.ok) {
-        console.error(await response.text());
-        return;
-    }
-
+    console.log("LAUNCH CLICKED")
     router.push('/products');
 }
 </script>
@@ -139,32 +95,27 @@ async function onDelete() {
         <div class="container">
             <Navbar
                 class="navbar"
-                pageName="Product Details"
-                pageTitle="Product Details and Modification"
+                pageName="Product Creation Page"
+                pageTitle="Product Creation"
             />
             <Sidebar class="sidebar" />
-
             <div class="main">
                 <div class="background">
-                    <h6>Photo</h6>
-
+                    <h6>Upload Photo</h6>
                     <label class="image-upload">
                         <input type="file" accept="image/*" @change="uploadImage">
                         <img v-if="imagePreview" :src="imagePreview" class="preview">
                         <img v-else src="/icons/Img.png" class="upload-icon">
                     </label>
-
                     <h6>Description</h6>
-
                     <textarea
                         class="description"
                         placeholder="Description"
                         v-model="product.description"
                     ></textarea>
                 </div>
-
                 <div class="form">
-                    <h1>Your Product Details</h1>
+                    <h1>Provide Product Details</h1>
 
                     <div style="grid-row: 2; grid-column: 1;">
                         <p>Product name</p>
@@ -206,21 +157,13 @@ async function onDelete() {
                         <input v-model.number="product.weight" type="number" placeholder="Enter in kgs">
                     </div>
 
-                    <Button
-                        @click="onDelete"
-                        style="grid-row: 6; grid-column: 1; margin-right: 100%;"
-                        buttonName="Delete"
-                        color="#8E2D35"
-                    />
-
                     <div class="button">
                         <router-link to="/products" style="text-decoration: none;">
                             <Button buttonName="Close" color="#8E2D35" />
                         </router-link>
-
                         <Button
-                            @click="onEdit"
-                            buttonName="Edit Product"
+                            @click="onLaunch"
+                            buttonName="Launch Product"
                             color="#8E2D35"
                         />
                     </div>
@@ -231,5 +174,5 @@ async function onDelete() {
 </template>
 
 <style scoped>
-@import "./formstyle.css";
+@import "../formstyle.css";
 </style>

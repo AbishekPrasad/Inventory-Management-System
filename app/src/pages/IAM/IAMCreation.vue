@@ -1,9 +1,9 @@
 <script setup>
-    import Plainbar from '../components/Plainbar.vue';
-    import Navbar from '../components/Navbar.vue';
-    import Sidebar from '../components/Sidebar.vue';
-    import Topbar from '../components/Topbar.vue';
-    import Button from '../components/Button.vue';
+    import Plainbar from '../../components/Plainbar.vue';
+    import Navbar from '../../components/Navbar.vue';
+    import Sidebar from '../../components/Sidebar.vue';
+    import Topbar from '../../components/Topbar.vue';
+    import Button from '../../components/Button.vue';
 </script>
 
 <template>
@@ -64,5 +64,5 @@
 </template>
 
 <style scoped>
-    @import "./formstyle.css";
+    @import "../formstyle.css";
 </style>
