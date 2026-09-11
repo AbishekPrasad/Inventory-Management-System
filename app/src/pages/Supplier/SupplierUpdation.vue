@@ -128,7 +128,6 @@ async function onDelete() {
 <template>
     <div>
         <Topbar />
-
         <div class="container">
             <Navbar
                 class="navbar"

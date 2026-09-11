@@ -13,6 +13,7 @@ import IAMCreation from './pages/IAM/IAMCreation.vue'
 
 import ProductUpdation from './pages/Product/ProductUpdation.vue'
 import SupplierUpdation from './pages/Supplier/SupplierUpdation.vue'
+import IAMUpdation from './pages/IAM/IAMUpdation.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -46,12 +47,16 @@ const router = createRouter({
             component: SupplierUpdation
         },
         {
-            path: '/iam',
+            path: '/employees',
             component: IAM
         },
         {
             path: '/employee-creation',
             component: IAMCreation
+        },
+        {
+            path: '/employee-details/:id',
+            component: IAMUpdation
         },
         {
             path: '/transactions',

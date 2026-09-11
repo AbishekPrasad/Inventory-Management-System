@@ -63,6 +63,17 @@ class Supplier(BaseModel):
     image: str = ""
     description: str = ""
 
+class Employee(BaseModel):
+    id: str = ""
+    firstname: str
+    lastname: str
+    email: str
+    phone: str
+    role: str
+    address: str
+    image: str = ""
+    description: str = ""
+
 
 @app.get("/products/{id}")
 def get_product(id: str):
@@ -273,4 +284,93 @@ def delete_supplier(id: str):
     raise HTTPException(
         status_code=404,
         detail="Supplier not found"
+    )
+
+@app.post("/employees")
+def create_employee(employee: Employee):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    employees = db["employees"]
+
+    if employees:
+        new_id = str(
+            max(
+                int(item["id"])
+                for item in employees
+            ) + 1
+        )
+    else:
+        new_id = "1"
+
+    new_employee = {
+        "id": new_id,
+        "firstname": employee.firstname,
+        "lastname": employee.lastname,
+        "email": employee.email,
+        "role": employee.role,
+        "phone": employee.phone,
+        "address": employee.address,
+        "image": employee.image,
+        "description": employee.description
+    }
+
+    employees.append(new_employee)
+
+    with open(DB_PATH, "w", encoding="utf-8") as file:
+        json.dump(db, file, indent=4)
+
+    return new_employee
+
+@app.get("/employees/{id}")
+def get_employee(id: str):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    for employee in db["employees"]:
+        if str(employee["id"]) == id:
+            return employee
+
+    raise HTTPException(
+        status_code=404,
+        detail="employee not found"
+    )
+
+@app.put("/employees/{id}")
+def update_employee(id: str, employee: Employee):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    for index, item in enumerate(db["employees"]):
+        if str(item["id"]) == id:
+            db["employees"][index] = employee.model_dump()
+
+            with open(DB_PATH, "w", encoding="utf-8") as file:
+                json.dump(db, file, indent=4)
+
+            return db["employees"][index]
+
+    raise HTTPException(
+        status_code=404,
+        detail="employee not found"
+    )
+
+
+@app.delete("/employees/{id}")
+def delete_employee(id: str):
+    with open(DB_PATH, "r", encoding="utf-8") as file:
+        db = json.load(file)
+
+    for index, employee in enumerate(db["employees"]):
+        if str(employee["id"]) == id:
+            deleted_employee = db["employees"].pop(index)
+
+            with open(DB_PATH, "w", encoding="utf-8") as file:
+                json.dump(db, file, indent=4)
+
+            return deleted_employee
+
+    raise HTTPException(
+        status_code=404,
+        detail="employee not found"
     )

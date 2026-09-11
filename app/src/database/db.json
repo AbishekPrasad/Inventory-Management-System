@@ -47,10 +47,15 @@
     ],
     "employees": [
         {
-            "id": "1",
-            "name": "Abishek",
-            "email": "abishek@company.com",
-            "role": "admin"
+            "id": "2",
+            "firstname": "zhehd",
+            "lastname": "erfefrger",
+            "email": "regerg",
+            "phone": "34",
+            "role": "ergerg",
+            "address": "fddg",
+            "image": "/images/beff3a5a-6de8-4811-b1e6-58a51d28306b.jpg",
+            "description": ""
         }
     ],
     "transactions": [

@@ -27,7 +27,7 @@ defineProps({
     margin-bottom: 10px;
     padding-left: 50px;
     padding-right: 20px;
-    width: 1120px;
+    width: 1130px;
     height: 80px;
     border-radius: 10px;
     border: 1px solid #BEBEBE;

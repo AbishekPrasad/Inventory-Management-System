@@ -15,7 +15,7 @@
             <router-link to="/Transactions">
                 <img class="icon" src="../../icons/Transaction.png">
             </router-link>
-            <router-link to="/iam">
+            <router-link to="/employees">
                 <img class="icon" src="../../icons/Employee.png">
             </router-link>
         </ul>
