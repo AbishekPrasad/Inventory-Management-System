@@ -37,3 +37,8 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+#Others
+database/public/
+database/db.json
+__pycache__/
