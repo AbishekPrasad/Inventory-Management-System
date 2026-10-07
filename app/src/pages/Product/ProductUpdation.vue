@@ -3,50 +3,105 @@ import Navbar from '../../components/Navbar.vue';
 import Sidebar from '../../components/Sidebar.vue';
 import Topbar from '../../components/Topbar.vue';
 import Button from '../../components/Button.vue';
+import InputForm from '../../components/InputForm.vue';
 
 import { reactive, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { uploadImage, onDelete, onEdit } from '../../composables/Products.js'
+import { onDelete, onEdit } from '../../composables/Products.js';
 
 const route = useRoute();
 const router = useRouter();
 const imagePreview = ref('');
 
 const product = reactive({
-    id: "",
-    name: "",
+    id: '',
+    name: '',
     ISQ: 0,
     price: 0,
     reorderLevel: 0,
-    category: "",
-    supplier: "",
-    sku: "",
+    category: '',
+    supplier: '',
+    sku: '',
     weight: 0,
-    image: "",
-    description: ""
+    image: '',
+    description: ''
 });
 
+const errors = reactive({
+    name: '',
+    ISQ: '',
+    price: '',
+    reorderLevel: '',
+    category: '',
+    supplier: '',
+    weight: '',
+    description: ''
+});
+
+function uploadImage(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    product.image = file;
+    imagePreview.value = URL.createObjectURL(file);
+}
 
 onMounted(async () => {
-    const response = await fetch(
-        `http://localhost:8000/products/${route.params.id}`
-    );
+    try {
+        const response = await fetch(
+            `http://localhost:8000/products/${route.params.id}`
+        );
 
-    if (!response.ok) {
-        console.error("Product not found");
-        return;
-    }
+        if (!response.ok) {
+            console.error('Product not found');
+            return;
+        }
 
-    const data = await response.json();
+        const data = await response.json();
 
-    Object.assign(product, data);
+        Object.assign(product, data);
 
-    if (data.image) {
-        imagePreview.value = `http://localhost:8000${data.image}`;
+        if (data.image) {
+            imagePreview.value = `http://localhost:8000${data.image}`;
+        }
+    } catch (error) {
+        console.error('Failed to load product:', error);
     }
 });
 
+function validateForm() {
+    Object.keys(errors).forEach(key => errors[key] = '');
+
+    if (!product.name.trim())
+        errors.name = 'Product name is required';
+
+    if (product.ISQ < 0)
+        errors.ISQ = 'Stock quantity cannot be negative';
+
+    if (product.price <= 0)
+        errors.price = 'Price must be greater than 0';
+
+    if (product.reorderLevel < 0)
+        errors.reorderLevel = 'Reorder level cannot be negative';
+
+    if (!product.category.trim())
+        errors.category = 'Category is required';
+
+    if (!product.supplier.trim())
+        errors.supplier = 'Supplier is required';
+
+    if (product.weight < 0)
+        errors.weight = 'Weight cannot be negative';
+
+    return !Object.values(errors).some(error => error);
+}
+
+async function editProduct() {
+    if (!validateForm()) return;
+    await onEdit(product, route, router);
+}
 </script>
 
 <template>
@@ -65,9 +120,21 @@ onMounted(async () => {
                     <h6>Photo</h6>
 
                     <label class="image-upload">
-                        <input type="file" accept="image/*" @change="uploadImage">
-                        <img v-if="imagePreview" :src="imagePreview" class="preview">
-                        <img v-else src="/icons/Img.png" class="upload-icon">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            @change="uploadImage($event, product, imagePreview)"
+                        >
+                        <img
+                            v-if="imagePreview"
+                            :src="imagePreview"
+                            class="preview"
+                        >
+                        <img
+                            v-else
+                            src="/icons/Img.png"
+                            class="upload-icon"
+                        >
                     </label>
 
                     <h6>Description</h6>
@@ -82,48 +149,80 @@ onMounted(async () => {
                 <div class="form">
                     <h1>Your Product Details</h1>
 
-                    <div style="grid-row: 2; grid-column: 1;">
-                        <p>Product name<span style="color: red;"> *</span></p>
-                        <input v-model="product.name" type="text" placeholder="Enter Product name">
-                    </div>
+                    <InputForm
+                        style="grid-row: 2; grid-column: 1;"
+                        name="Product Name"
+                        type="text"
+                        v-model="product.name"
+                        placeholder="Enter Product name"
+                        :error="errors.name"
+                    />
 
-                    <div style="grid-row: 2; grid-column: 2;">
-                        <p>Initial Stock Quality (ISQ)<span style="color: red;"> *</span></p>
-                        <input v-model.number="product.ISQ" type="number" placeholder="Enter 50">
-                    </div>
+                    <InputForm
+                        style="grid-row: 2; grid-column: 2;"
+                        name="Initial Stock Quantity (ISQ)"
+                        type="number"
+                        v-model="product.ISQ"
+                        placeholder="Enter 50"
+                        :error="errors.ISQ"
+                    />
 
-                    <div style="grid-row: 3; grid-column: 1;">
-                        <p>Unit Price<span style="color: red;"> *</span></p>
-                        <input v-model.number="product.price" type="number" placeholder="Enter 25.65">
-                    </div>
+                    <InputForm
+                        style="grid-row: 3; grid-column: 1;"
+                        name="Unit Price"
+                        type="number"
+                        v-model="product.price"
+                        placeholder="Enter 25.65"
+                        :error="errors.price"
+                    />
 
-                    <div style="grid-row: 3; grid-column: 2;">
-                        <p>Reorder Level (RL)<span style="color: red;"> *</span></p>
-                        <input v-model.number="product.reorderLevel" type="number" placeholder="Enter 10">
-                    </div>
+                    <InputForm
+                        style="grid-row: 3; grid-column: 2;"
+                        name="Reorder Level (RL)"
+                        type="number"
+                        v-model="product.reorderLevel"
+                        placeholder="Enter 10"
+                        :error="errors.reorderLevel"
+                    />
 
-                    <div style="grid-row: 4; grid-column: 1;">
-                        <p>Category<span style="color: red;"> *</span></p>
-                        <input v-model="product.category" type="text" placeholder="Enter Category">
-                    </div>
+                    <InputForm
+                        style="grid-row: 4; grid-column: 1;"
+                        name="Category"
+                        type="text"
+                        v-model="product.category"
+                        placeholder="Enter Category"
+                        :error="errors.category"
+                    />
 
-                    <div style="grid-row: 4; grid-column: 2;">
-                        <p>Supplier<span style="color: red;"> *</span></p>
-                        <input v-model="product.supplier" type="text" placeholder="Enter Supplier">
-                    </div>
+                    <InputForm
+                        style="grid-row: 4; grid-column: 2;"
+                        name="Supplier"
+                        type="text"
+                        v-model="product.supplier"
+                        placeholder="Enter Supplier"
+                        :error="errors.supplier"
+                    />
 
-                    <div style="grid-row: 5; grid-column: 1;">
-                        <p>Stock Keeping Unit (SKU)</p>
-                        <input :value="product.sku" type="text" placeholder="PRD-101" readonly>
-                    </div>
+                    <InputForm
+                        style="grid-row: 5; grid-column: 1;"
+                        name="Stock Keeping Unit (SKU)"
+                        type="text"
+                        v-model="product.sku"
+                        placeholder="PRD-101"
+                        readonly
+                    />
 
-                    <div style="grid-row: 5; grid-column: 2;">
-                        <p>Weight</p>
-                        <input v-model.number="product.weight" type="number" placeholder="Enter in kgs">
-                    </div>
+                    <InputForm
+                        style="grid-row: 5; grid-column: 2;"
+                        name="Weight"
+                        type="number"
+                        v-model="product.weight"
+                        placeholder="Enter in kgs"
+                        :error="errors.weight"
+                    />
 
                     <Button
-                        @click="onDelete"
+                        @click="onDelete(product.id, router)"
                         style="grid-row: 6; grid-column: 1; margin-right: 100%;"
                         buttonName="Delete"
                         color="white"
@@ -131,12 +230,18 @@ onMounted(async () => {
                     />
 
                     <div class="button">
-                        <router-link to="/products" style="text-decoration: none;">
-                            <Button buttonName="Close" color="#8E2D35" />
+                        <router-link
+                            to="/products"
+                            style="text-decoration: none;"
+                        >
+                            <Button
+                                buttonName="Close"
+                                color="#8E2D35"
+                            />
                         </router-link>
 
                         <Button
-                            @click="onEdit"
+                            @click="editProduct"
                             buttonName="Edit Product"
                             color="white"
                             backgroundColor="#8E2D35"
@@ -150,6 +255,7 @@ onMounted(async () => {
 
 <style scoped>
 @import "../formstyle.css";
+
 input {
     background-color: #F9F9F9;
 }

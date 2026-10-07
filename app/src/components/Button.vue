@@ -1,15 +1,15 @@
 <script setup>
- 
     const button = defineProps({
         buttonName: String,
         backgroundColor: String,
         color: String
     })
 
+    const emit = defineEmits(['onClick'])
 </script>
 
 <template>
-    <div class="button">
+    <div class="button" @click="emit('onClick')">
         <p class="text">{{ button.buttonName }}</p>
     </div>
 </template>

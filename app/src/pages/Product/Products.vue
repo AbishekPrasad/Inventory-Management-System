@@ -9,10 +9,12 @@
 
     import products from '../../database/db.json'
     import { ref } from 'vue';
-
+ 
     const num_of_items = ref(0)
     const items = ref(products.products)
     const allItems = products.products
+
+    console.log(items.value)
 
     num_of_items.value = items.value.length
     num_of_items.value = "(" + String(num_of_items.value) + ")"
@@ -39,6 +41,7 @@
             item.sku.toLowerCase().includes(value)
         )
     }
+    
 </script>
 
 <template>
@@ -54,10 +57,10 @@
             <Sidebar class="sidebar" />
             <div class="features"> 
                 <div class="action-features">
-                    <Button @click="sortAZ" color="#e1e1e1" buttonName="A - Z" style="width: 100px;"/>
-                    <Button @click="sortZA" color="#e1e1e1" buttonName="Z - A" style="width: 100px;"/>
+                    <Button @onClick="sortAZ" color="#e1e1e1" buttonName="A - Z" style="width: 100px;"/>
+                    <Button @onClick="sortZA" color="#e1e1e1" buttonName="Z - A" style="width: 100px;"/>
                 </div>
-                <Searchbar class="searchbar" @search="searchProducts"/>
+                <Searchbar class="searchbar" @search="searchProducts($event)"/>
                 <router-link to="/product-creation" style="text-decoration: none;">
                     <Button class="button" buttonName="Create Product" color="white" backgroundColor="#8E2D35"/>
                 </router-link>

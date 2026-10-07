@@ -38,19 +38,6 @@
             "weight": 1.0,
             "image": "/images/7cff9cd2-3262-4430-8605-a787b7292791.jpg",
             "description": ""
-        },
-        {
-            "id": "11",
-            "name": "Brush",
-            "sku": "PRD-111",
-            "category": "Cosmotics",
-            "supplier": "Oral",
-            "price": 10.0,
-            "ISQ": 251,
-            "reorderLevel": 25,
-            "weight": 0.5,
-            "image": "/images/6bf987bd-35ea-48a6-aef1-2031c361a0a1.jpg",
-            "description": ""
         }
     ],
     "suppliers": [

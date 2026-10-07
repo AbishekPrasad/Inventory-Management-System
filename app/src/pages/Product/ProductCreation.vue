@@ -6,24 +6,77 @@ import Navbar from '../../components/Navbar.vue';
 import Sidebar from '../../components/Sidebar.vue';
 import Topbar from '../../components/Topbar.vue';
 import Button from '../../components/Button.vue';
+import InputForm from '../../components/InputForm.vue';
 
-import { uploadImage, onLaunch } from '../../composables/Products.js'
+import { onLaunch } from '../../composables/Products.js';
 
 const router = useRouter();
 const imagePreview = ref('');
 
 const product = reactive({
-    name: "",
+    name: '',
     ISQ: 0,
-    price: 0.0,
+    price: 0,
     reorderLevel: 0,
-    category: "",
-    supplier: "",
+    category: '',
+    supplier: '',
     weight: 0,
-    image: "",
-    description: ""
+    image: '',
+    description: ''
 });
 
+const errors = reactive({
+    name: '',
+    ISQ: '',
+    price: '',
+    reorderLevel: '',
+    category: '',
+    supplier: '',
+    weight: '',
+    description: ''
+});
+
+function uploadImage(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    product.image = file;
+    imagePreview.value = URL.createObjectURL(file);
+}
+
+
+function validateForm() {
+    Object.keys(errors).forEach(key => errors[key] = '');
+
+    if (!product.name.trim())
+        errors.name = 'Product name is required';
+
+    if (product.ISQ < 0)
+        errors.ISQ = 'Stock quantity cannot be negative';
+
+    if (product.price <= 0)
+        errors.price = 'Price must be greater than 0';
+
+    if (product.reorderLevel < 0)
+        errors.reorderLevel = 'Reorder level cannot be negative';
+
+    if (!product.category.trim())
+        errors.category = 'Category is required';
+
+    if (!product.supplier.trim())
+        errors.supplier = 'Supplier is required';
+
+    if (product.weight <= 0)
+        errors.weight = 'Weight must be greater than 0';
+
+    return !Object.values(errors).some(error => error);
+}
+
+async function launchProduct() {
+    if (!validateForm()) return;
+    await onLaunch(product, router);
+}
 </script>
 
 <template>
@@ -40,9 +93,21 @@ const product = reactive({
                 <div class="background">
                     <h6>Upload Photo</h6>
                     <label class="image-upload">
-                        <input type="file" accept="image/*" @change="uploadImage">
-                        <img v-if="imagePreview" :src="imagePreview" class="preview">
-                        <img v-else src="/icons/Img.png" class="upload-icon">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            @change="uploadImage"
+                        >
+                        <img
+                            v-if="imagePreview"
+                            :src="imagePreview"
+                            class="preview"
+                        >
+                        <img
+                            v-else
+                            src="/icons/Img.png"
+                            class="upload-icon"
+                        >
                     </label>
                     <h6>Description</h6>
                     <textarea
@@ -50,56 +115,79 @@ const product = reactive({
                         placeholder="Description"
                         v-model="product.description"
                     ></textarea>
+                    <p v-if="errors.description">{{ errors.description }}</p>
                 </div>
                 <div class="form">
                     <h1>Provide Product Details</h1>
-
-                    <div style="grid-row: 2; grid-column: 1;">
-                        <p>Product name<span style="color: red;"> *</span></p>
-                        <input v-model="product.name" type="text" placeholder="Enter Product name">
-                    </div>
-
-                    <div style="grid-row: 2; grid-column: 2;">
-                        <p>Initial Stock Quality (ISQ)<span style="color: red;"> *</span></p>
-                        <input v-model.number="product.ISQ" type="number" placeholder="Enter 50">
-                    </div>
-
-                    <div style="grid-row: 3; grid-column: 1;">
-                        <p>Unit Price<span style="color: red;"> *</span></p>
-                        <input v-model.number="product.price" type="number" placeholder="Enter 25.65">
-                    </div>
-
-                    <div style="grid-row: 3; grid-column: 2;">
-                        <p>Reorder Level (RL)<span style="color: red;"> *</span></p>
-                        <input v-model.number="product.reorderLevel" type="number" placeholder="Enter 10">
-                    </div>
-
-                    <div style="grid-row: 4; grid-column: 1;">
-                        <p>Category<span style="color: red;"> *</span></p>
-                        <input v-model="product.category" type="text" placeholder="Enter Category">
-                    </div>
-
-                    <div style="grid-row: 4; grid-column: 2;">
-                        <p>Supplier<span style="color: red;"> *</span></p>
-                        <input v-model="product.supplier" type="text" placeholder="Enter Supplier">
-                    </div>
-
-                    <div style="grid-row: 5; grid-column: 1;">
-                        <p>Stock Keeping Unit (SKU)</p>
-                        <input value="Auto-Generated" type="text" placeholder="PRD-101" readonly>
-                    </div>
-
-                    <div style="grid-row: 5; grid-column: 2;">
-                        <p>Weight</p>
-                        <input v-model.number="product.weight" type="number" placeholder="Enter in kgs">
-                    </div>
-
+                    <InputForm
+                        style="grid-row: 2; grid-column: 1;"
+                        name="Product Name"
+                        type="text"
+                        v-model="product.name"
+                        placeholder="Enter Product name"
+                        :error="errors.name"
+                    />
+                    <InputForm
+                        style="grid-row: 2; grid-column: 2;"
+                        name="Initial Stock Quantity (ISQ)"
+                        type="number"
+                        v-model="product.ISQ"
+                        placeholder="Enter 50"
+                        :error="errors.ISQ"
+                    />
+                    <InputForm
+                        style="grid-row: 3; grid-column: 1;"
+                        name="Unit Price"
+                        type="number"
+                        v-model="product.price"
+                        placeholder="Enter 25.65"
+                        :error="errors.price"
+                    />
+                    <InputForm
+                        style="grid-row: 3; grid-column: 2;"
+                        name="Reorder Level (RL)"
+                        type="number"
+                        v-model="product.reorderLevel"
+                        placeholder="Enter 10"
+                        :error="errors.reorderLevel"
+                    />
+                    <InputForm
+                        style="grid-row: 4; grid-column: 1;"
+                        name="Category"
+                        type="text"
+                        v-model="product.category"
+                        placeholder="Enter Category"
+                        :error="errors.category"
+                    />
+                    <InputForm
+                        style="grid-row: 4; grid-column: 2;"
+                        name="Supplier"
+                        type="text"
+                        v-model="product.supplier"
+                        placeholder="Enter Supplier"
+                        :error="errors.supplier"
+                    />
+                    <InputForm
+                        style="grid-row: 5; grid-column: 1;"
+                        name="SKU Code"
+                        type="text"
+                        placeholder="Auto-generated"
+                        readonly
+                    />
+                    <InputForm
+                        style="grid-row: 5; grid-column: 2;"
+                        name="Weight"
+                        type="number"
+                        v-model="product.weight"
+                        placeholder="Enter in Kg"
+                        :error="errors.weight"
+                    />
                     <div class="button">
                         <router-link to="/products" style="text-decoration: none;">
                             <Button buttonName="Close" color="#8E2D35" />
                         </router-link>
                         <Button
-                            @click="onLaunch"
+                            @click="launchProduct"
                             buttonName="Launch Product"
                             color="white"
                             backgroundColor="#8E2D35"

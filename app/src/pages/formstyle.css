@@ -28,7 +28,7 @@ h1 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(6, 1fr);
-    gap: 30px;
+    gap: 10px;
 }
 input {
     border: 1px solid #e1e1e1;
