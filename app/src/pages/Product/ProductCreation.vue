@@ -1,11 +1,13 @@
 <script setup>
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import Navbar from '../../components/Navbar.vue';
 import Sidebar from '../../components/Sidebar.vue';
 import Topbar from '../../components/Topbar.vue';
 import Button from '../../components/Button.vue';
 
-import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { uploadImage, onLaunch } from '../../composables/Products.js'
 
 const router = useRouter();
 const imagePreview = ref('');
@@ -22,71 +24,6 @@ const product = reactive({
     description: ""
 });
 
-function uploadImage(event) {
-    const file = event.target.files[0];
-
-    if (!file) {
-        return;
-    }
-
-    product.image = file;
-    imagePreview.value = URL.createObjectURL(file);
-}
-
-async function onLaunch() {
-    let imagePath = "";
-
-    if (product.image) {
-        const formData = new FormData();
-        formData.append("image", product.image);
-
-        const imageResponse = await fetch(
-            'http://localhost:8000/upload-image',
-            {
-                method: 'POST',
-                body: formData
-            }
-        );
-
-        if (!imageResponse.ok) {
-            console.error(await imageResponse.text());
-            return;
-        }
-
-        const imageData = await imageResponse.json();
-        imagePath = imageData.image;
-    }
-
-    const newProduct = {
-        name: product.name,
-        category: product.category,
-        supplier: product.supplier,
-        price: product.price,
-        ISQ: product.ISQ,
-        reorderLevel: product.reorderLevel,
-        weight: product.weight,
-        image: imagePath,
-        description: product.description
-    };
-
-    const response = await fetch(
-        'http://localhost:8000/products',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newProduct)
-        }
-    );
-
-    if (!response.ok) {
-        console.error(await response.text());
-        return;
-    }
-    console.log("LAUNCH CLICKED")
-    router.push('/products');
-}
 </script>
 
 <template>
@@ -118,32 +55,32 @@ async function onLaunch() {
                     <h1>Provide Product Details</h1>
 
                     <div style="grid-row: 2; grid-column: 1;">
-                        <p>Product name</p>
+                        <p>Product name<span style="color: red;"> *</span></p>
                         <input v-model="product.name" type="text" placeholder="Enter Product name">
                     </div>
 
                     <div style="grid-row: 2; grid-column: 2;">
-                        <p>Initial Stock Quality (ISQ)</p>
+                        <p>Initial Stock Quality (ISQ)<span style="color: red;"> *</span></p>
                         <input v-model.number="product.ISQ" type="number" placeholder="Enter 50">
                     </div>
 
                     <div style="grid-row: 3; grid-column: 1;">
-                        <p>Unit Price</p>
+                        <p>Unit Price<span style="color: red;"> *</span></p>
                         <input v-model.number="product.price" type="number" placeholder="Enter 25.65">
                     </div>
 
                     <div style="grid-row: 3; grid-column: 2;">
-                        <p>Reorder Level (RL)</p>
+                        <p>Reorder Level (RL)<span style="color: red;"> *</span></p>
                         <input v-model.number="product.reorderLevel" type="number" placeholder="Enter 10">
                     </div>
 
                     <div style="grid-row: 4; grid-column: 1;">
-                        <p>Category</p>
+                        <p>Category<span style="color: red;"> *</span></p>
                         <input v-model="product.category" type="text" placeholder="Enter Category">
                     </div>
 
                     <div style="grid-row: 4; grid-column: 2;">
-                        <p>Supplier</p>
+                        <p>Supplier<span style="color: red;"> *</span></p>
                         <input v-model="product.supplier" type="text" placeholder="Enter Supplier">
                     </div>
 
@@ -164,7 +101,8 @@ async function onLaunch() {
                         <Button
                             @click="onLaunch"
                             buttonName="Launch Product"
-                            color="#8E2D35"
+                            color="white"
+                            backgroundColor="#8E2D35"
                         />
                     </div>
                 </div>

@@ -1,7 +1,6 @@
 <script setup>
 import Sidebar from './components/Sidebar.vue';
 import Products from './pages/Product/Products.vue';
-import Suppliers from './pages/Supplier/Suppliers.vue';
 
 </script>
 

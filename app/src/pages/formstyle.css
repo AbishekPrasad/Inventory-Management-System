@@ -31,7 +31,7 @@ h1 {
     gap: 30px;
 }
 input {
-    border: 1px solid #BEBEBE;
+    border: 1px solid #e1e1e1;
     border-radius: 6px;
     font-size: 9pt;
     font-family: 'roboto';
@@ -50,24 +50,27 @@ input::placeholder{
     margin-top: auto;
 }
 p {
-    font-family: 'roboto';
+    font-family: 'carlito';
+    font-size: 10pt;
+    font-weight: 800;
 }
 .background {
     display: flex;
     flex-direction: column;
-    height: 450px;
-    width: 250px;
-    border: 1px solid #BEBEBE;
+    width: 230px;
+    border: 1px solid #e1e1e1;
     background-color: #F9F9F9;
     border-radius: 10px;
     align-items: center;
 }
 
 h6 {
-    font-family: 'roboto';
-    font-weight: 500;
-    padding: 10px;
+    font-family: 'carlito';
+    font-weight: 800;
+    font-size: 9pt;
+    padding: 9.5px;
     margin: 0;
+    color: #7b7b7b;
 }
 
 .image-upload {
@@ -101,7 +104,7 @@ h6 {
 .description {
     background-color: white;
     width: 210px;
-    height: 150px;
+    height: 160px;
     border-radius: 6px;
     border: 1px solid #EAEAEA;
     padding: 10px;

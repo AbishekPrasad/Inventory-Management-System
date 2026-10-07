@@ -29,7 +29,7 @@ const emit = defineEmits(['search'])
     height: 30px;
     width: 350px;
     background-color: white;
-    border: 1px solid #BEBEBE;
+    border: 1px solid #e1e1e1;
     border-radius: 50px;
     align-items: center;
     padding: 0px 10px;

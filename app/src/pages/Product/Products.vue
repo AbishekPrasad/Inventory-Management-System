@@ -5,8 +5,9 @@
     import Topbar from '../../components/Topbar.vue';
     import Button from '../../components/Button.vue';
     import Searchbar from '../../components/Searchbar.vue';
-    import products from '../../database/db.json'
+    import BaseTable from '../../components/BaseTable.vue'
 
+    import products from '../../database/db.json'
     import { ref } from 'vue';
 
     const num_of_items = ref(0)
@@ -15,9 +16,6 @@
 
     num_of_items.value = items.value.length
     num_of_items.value = "(" + String(num_of_items.value) + ")"
-
-    const amount = ref(0)
-    const Tquantity = ref(0)
 
     function sortAZ() {
         items.value = [...items.value].sort((a, b) =>
@@ -56,28 +54,39 @@
             <Sidebar class="sidebar" />
             <div class="features"> 
                 <div class="action-features">
-                    <Button @click="sortAZ" color="#BEBEBE" buttonName="A - Z" style="width: 100px;"/>
-                    <Button @click="sortZA" color="#BEBEBE" buttonName="Z - A" style="width: 100px;"/>
+                    <Button @click="sortAZ" color="#e1e1e1" buttonName="A - Z" style="width: 100px;"/>
+                    <Button @click="sortZA" color="#e1e1e1" buttonName="Z - A" style="width: 100px;"/>
                 </div>
                 <Searchbar class="searchbar" @search="searchProducts"/>
                 <router-link to="/product-creation" style="text-decoration: none;">
-                    <Button class="button" buttonName="Create Product" color="#8E2D35"/>
+                    <Button class="button" buttonName="Create Product" color="white" backgroundColor="#8E2D35"/>
                 </router-link>
             </div>
             <div class="main">
-                <Plainbar 
-                    v-for="item in items"
-                    :key="item.id"
-                    :routeTo="`/product-details/${item.id}`"
-                >
-                    <h5>{{ item.sku }}</h5>
-                    <h5>{{ item.name }}</h5>
-                    <h5>{{ item.category }}</h5>
-                    <h5>{{ item.supplier }}</h5>
-                    <h5>{{ Tquantity + item.ISQ }}</h5>
-                    <h5>{{ amount + item.price }}</h5>
-                    <img :src="item.image ? `http://localhost:8000${item.image}` : '/icons/Img.png'">
-                </Plainbar>         
+                <BaseTable>
+                    <template #heading>
+                        <h6>Product</h6>
+                        <h6>SKU Number</h6>
+                        <h6>Supplier</h6>
+                        <h6>Stock Level</h6>
+                        <h6>Price</h6>
+                    </template>
+                    <template #content>
+                        <Plainbar 
+                            v-for="item in items"
+                            :key="item.id"
+                            :routeTo="`/product-details/${item.id}`"
+                            :image="item.image ? `http://localhost:8000${item.image}` : '/icons/Img.png'"
+                            :name="item.name"
+                            :category="item.category"
+                        >
+                            <h5>{{ item.sku }}</h5>
+                            <h5>{{ item.supplier }}</h5>
+                            <h5>{{ item.ISQ }}</h5>
+                            <h5>{{ item.price }}</h5>
+                        </Plainbar>
+                    </template>
+                </BaseTable>       
             </div>
         </div>
     </div>

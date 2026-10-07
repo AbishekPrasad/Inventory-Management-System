@@ -5,18 +5,8 @@
 <template>
     <div class="sidebar">
         <ul class="features">
-            <img class="icon" src="../../icons/Dashboard Icon.png">
-            <router-link to="/suppliers">
-                <img class="icon" src="../../icons/Suppliers.png">
-            </router-link>
             <router-link to="/products">
                 <img class="icon" src="../../icons/Products.png">
-            </router-link>
-            <router-link to="/Transactions">
-                <img class="icon" src="../../icons/Transaction.png">
-            </router-link>
-            <router-link to="/employees">
-                <img class="icon" src="../../icons/Employee.png">
             </router-link>
         </ul>
     </div>
